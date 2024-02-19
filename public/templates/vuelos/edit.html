@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=+, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!-- La llamada de node_modules de arriba es INCORRECTA. HAY QUE REVISAR -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <h1>Vuelos EDIT</h1>
+    <main class="flex-container">
+        <div id="main" class="row">
+            <form action="" method="">
+                <input name="numero_vuelo" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="aerolinea" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="origen" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="destino" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="fecha_salida" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="hora_salida" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="fecha_llegada" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <input name="hora_llegada" class="form-control form-control-lg" type="text" aria-label=".form-control-lg example">
+                <button type="button" onclick ="update()" class="btn btn-secondary">Actualizar</button>
+            </form>
+            <a href="/vuelos/index" class="btn btn-secondary">Atras</a>
+        </div>
+    </main>
+</body>
+
+<script>
+    /**
+        Para recoger el id del vuelos, es decir, el id de la URL necesito los siguientes pasos:
+        1. Recoger la URL completa
+        2. Realizar split para seccionar URL
+        3. Recoger el ultimo elemento.
+
+        Utilizamos window.location para ver los parametros y elegir el que mas se acerque a lo que necesitamos.
+        Tenemos dos optiones: una con la clave "pathname" y otra con la clave "href".
+
+        Para introducir valores dentro de los inputs necesitamos acceder a la etiqueta <form>
+        1. Acceder al <form>. Para esto usamos document.forms
+        2. Acceder a los elementos del formulario. Para esto usamos .elements
+    */
+
+    // elementos_formulario contiene todos los inputs del formulario (duplicados)
+    // Aparecen en numero por orden de aparicion y ademas por valor del atributo 'name'
+    let elementos_formulario = document.forms[0].elements;
+
+    // Recogemos el id de la URL
+    let path = window.location.pathname.split("/");
+    let id = path[path.length-1];
+
+    fetch(`/vuelo/${id}`)
+    .then((response) => response.json())
+    .then((vuelo) => {
+        // numero_vuelo, aerolinea, origen, destino, fecha_salida, hora_salida, fecha_llegada, hora_llegada 
+        elementos_formulario.numero_vuelo.value = vuelo[0].numero_vuelo;
+        elementos_formulario.aerolinea.value = vuelo[0].aerolinea;
+        elementos_formulario.origen.value = vuelo[0].origen;
+        elementos_formulario.destino.value = vuelo[0].destino;
+        elementos_formulario.fecha_salida.value = vuelo[0].fecha_salida;
+        elementos_formulario.hora_salida.value = vuelo[0].hora_salida;
+        elementos_formulario.fecha_llegada.value = vuelo[0].fecha_llegada;
+        elementos_formulario.hora_llegada.value = vuelo[0].hora_llegada;
+    });
+
+    /**
+    * Funcion que se encarga de realizar la actualizacion de datos del vuelos en la base de datos.
+    * El objetivo es llamar a la ruta correspondiente (con metodo PUT) y enviarle los datos
+    */
+    function update(){
+        // Necesito los datos del vuelos.
+        // Ya tenemos los datos que estan en la variable elementos_formulario
+
+        // Creo el objeto del vuelos con los datos que tienen que ser actualizados
+        let vuelo = {
+            numero_vuelo : elementos_formulario.numero_vuelo.value ,
+            aerolinea : elementos_formulario.aerolinea.value,
+            origen : elementos_formulario.origen.value,
+            destino : elementos_formulario.destino.value,
+            fecha_salida : elementos_formulario.fecha_salida.value,
+            hora_salida : elementos_formulario.hora_salida.value,
+            fecha_llegada : elementos_formulario.fecha_llegada.value,
+            hora_llegada : elementos_formulario.hora_llegada.value
+        };
+
+        /* 
+        * Realizamos llamada fetch para actualizar.
+        * Especificamos que es un METHOD PUT porque mi ruta en el app.js es de tipo PUT.
+        * Es de tipo PUT porque ACTUALIZO DATOS EXISTENTES (no introduci nuevos: INSERT vs UPDATE en SQL)
+        * Debo especificar que le envio un JSON y eso lo hago en la cabecera (headers)
+        * Content-Type es el tipo de contenido que envío.
+        * En el body especifico el contenido que voy a enviar. DEBE SER DE TIPO JSON
+        * Para pasar un objeto a tipo JSON uso JSON.stringify(objeto)
+        */
+        console.log('Id del vuelo: ' + id);
+        
+
+        fetch(`/vuelos/update/${id}`,{
+            method: "PUT",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(vuelo)
+        })
+        .then((response) => response.json())
+        .then((respuesta) => {
+            console.log(respuesta);
+            if(respuesta.message == true){
+                // redireccionar a vuelos
+                window.location.href = "/vuelos/index";
+            }else{
+                // No hay respuesta de estado correcta, por lo que hay un error o no funciona.
+            }
+        });
+    }
+    
+</script>
+</html>

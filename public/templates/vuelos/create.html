@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!-- La llamada de node_modules de arriba es INCORRECTA. HAY QUE REVISAR -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <h1>Vuelos CREATE</h1>
+    <main class="flex-container">
+        <a href="/vuelos/index" class="btn btn-secondary">Atras</a>
+        <div id="main" class="row">
+            <form action="/vuelos/save" method="POST">
+                
+                <div class="mb-3">
+                    <label class="form-label">numero_vuelo</label>
+                    <input name="numero_vuelo" type="text" class="form-control" id="numero_vuelo" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">aerolinea</label>
+                    <input name="aerolinea" type="text" class="form-control" id="exampleFormControlInput1" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">origen</label>
+                    <input name="origen" type="text" class="form-control" id="exampleFormControlInput1" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">destino</label>
+                    <input name="destino" type="text" class="form-control" id="exampleFormControlInput1" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">fecha_llegada</label>
+                    <input name="fecha_llegada" type="text" step=".01" class="form-control" id="exampleFormControlInput1">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">hora_llegada</label>
+                    <input name="hora_llegada" type="text" class="form-control" id="exampleFormControlInput1">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">fecha_salida</label>
+                    <input name="fecha_salida" type="text" class="form-control" id="exampleFormControlInput1" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">hora_salida</label>
+                    <input name="hora_salida" type="text" step=".01" class="form-control" id="exampleFormControlInput1">
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

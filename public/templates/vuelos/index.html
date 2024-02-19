@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=+, initial-scale=1.0">
+    <title>Index</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .cssbuttons-io-button {
+            display: flex;
+            align-items: center;
+            margin-left: 48%;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 0.7em 1.4em 0.7em 1.1em;
+            color: white;
+            background: #ad5389;
+            background: linear-gradient(0deg, rgba(20,167,62,1) 0%, rgba(102,247,113,1) 100%);
+            border: none;
+            box-shadow: 0 0.7em 1.5em -0.5em #14a73e98;
+            letter-spacing: 0.05em;
+            border-radius: 20em;
+        }
+        
+        .cssbuttons-io-button svg {
+            margin-right: 6px;
+        }
+        
+        .cssbuttons-io-button:hover {
+            box-shadow: 0 0.5em 1.5em -0.5em #14a73e98;
+        }
+
+        .cssbuttons-io-button:active {
+            box-shadow: 0 0.3em 1em -0.5em #14a73e98;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-left: 46%">Vuelos</h1>
+    <main class="flex-container" style="width: 95%; margin: 20px">
+        <a href="/vuelos/create"><button class="cssbuttons-io-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+            <span>Add</span>
+        </button></a>
+        <div id="main" class="row"></div>
+    </main>
+</body>
+
+<script>
+    /*
+        Una vez estamos dentro de la vista, necesitamos poblar el fichero con datos.
+
+        1. Generar contenido o vista.
+        2. Realizar una llamada de tipo fetch que devuelva datos.
+            
+    */
+
+    /*
+        Utilizamos llamadas fetch para recibir los datos de la ruta /vuelos-all.
+        fetch va a utilizar dos llamads .then para gestionar los datos.
+
+        La primera unicamente especifica el formato a recibir, este caso unjson, por lo que colocamos .json.
+        La segunda es la que puede gestionar los datos en formato que ha sido especificado antes.
+    */
+    let main = document.getElementById('main');
+    
+    fetch('/vuelos-all')
+    .then((response) => response.json())
+    .then((vuelos) =>{
+        console.log(vuelos);
+
+        /*
+            Al recorrer con un forEach el contenido de los vuelos, 
+            utilizamos una variable llamada vuelo que tiene el contenido
+            de cada iteracion.
+
+            Esto quiere decir que cada iteracion tiene un objeto distinto de tipo json.
+            numero_vuelo, aerolinea, origen, destino, fecha_salida, hora_salida, fecha_llegada, hora_llegada
+        */
+        vuelos.forEach((vuelo) =>{
+            console.log(vuelo);
+
+            // Esto genera una etiqueta div
+            // <div class="card" style="width: 18rem;">
+            let div1 = document.createElement('div');
+            div1.setAttribute('class', 'card');
+            div1.setAttribute('style', 'width: 18rem; margin-left:50px; margin-top: 20px;');
+
+            // <div class="card-body">
+            let div2 = document.createElement('div');
+            div2.classList.add('card-body');
+
+            // <h5 class="card-title">Card title</h5>
+            let h5 = document.createElement('h5');
+            h5.classList.add('card-title');
+            h5.textContent = `${vuelo.origen} - ${vuelo.destino}`;
+            div2.appendChild(h5);
+
+            // <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            let p = document.createElement('p');
+            p.classList.add('card-text');
+            p.textContent = `Aerolinea: ${vuelo.aerolinea}`;
+            div2.appendChild(p);
+
+            let p2 = document.createElement('p');
+            p.classList.add('card-text');
+            p.textContent = `Hora: ${vuelo.hora_salida} - ${vuelo.hora_llegada}`;
+            div2.appendChild(p);
+
+            // <a href="#" class="btn btn-primary">Go somewhere</a>
+            let a = document.createElement('a');
+            a.classList.add('btn');
+            a.classList.add('btn-primary');
+            a.textContent = 'Ver detalles';
+            a.setAttribute('href', `/vuelos/show/${vuelo.id}`);
+            div2.appendChild(a);
+
+            // <a href="#" class="btn btn-warning">Go somewhere</a>
+            let a2 = document.createElement('a');
+            a2.classList.add('btn');
+            a2.classList.add('btn-warning');
+            a2.textContent = 'Editar';
+            a2.setAttribute('href', `/vuelos/edit/${vuelo.id}`);
+            div2.appendChild(a2);
+            
+            // <a href="#" class="btn btn-danger">Go somewhere</a>
+            let a3 = document.createElement('a');
+            a3.classList.add('btn');
+            a3.classList.add('btn-danger');
+            a3.textContent = 'Eliminar';
+            a3.addEventListener("click", (event) => {
+                event.preventDefault();
+                fetch(`/vuelos/delete/${vuelo.id}`, {
+                    method: "DELETE"
+                });
+                location.reload();
+            });
+            div2.appendChild(a3);
+
+
+            div1.appendChild(div2);
+
+            main.appendChild(div1);
+            /*
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+            */
+        });
+    });
+    
+</script>
+</html>

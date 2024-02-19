@@ -1,0 +1,17 @@
+{
+  "name": "practicaexpress",
+  "version": "1.0.0",
+  "description": "Trimestre 2. Practica 2 Realizar un proyecto JavaScript con NodeJS y Express con la conexion a base de datos MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.2",
+    "express": "^4.18.2",
+    "mysql": "github:mysqljs/mysql",
+    "nodemon": "^3.0.3"
+  }
+}
